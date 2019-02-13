@@ -7,7 +7,7 @@
 // Ignore all incoming requests during these timeouts
 // MH-Z19B is observed to send some crap via UART during first 20 seconds of operation
 // So one should wait at least for 25 seconds and clear buffer after that (any IO operation
-// will should call flush_sensor_port_in() internally) 
+// should call flush_sensor_port_in() internally)
 #define START_TIMEOUT_MS 100000  // Accordint to datasheet, it should be 3 min.
 #define READ_PPM_TIMEOUT_MS 10000
 #define SET_ABC_TIMEOUT_MS 10000
@@ -57,4 +57,4 @@ class SensorMH_Z19B {
 
 
 #endif // _MH_Z19B_H
-
+
