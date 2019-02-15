@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <HardwareSerial.h>
+#include <HardwareSerial.h>  // Only for debugging purposes
 
 #include "mh_z19b.h"
 
@@ -38,6 +38,7 @@ SensorMH_Z19B::~SensorMH_Z19B() {
 
 bool SensorMH_Z19B::is_ready() const {
   unsigned long cur_millis = millis();
+// DEBUG
 //  Serial.print("cur_millis: ");
 //  Serial.print(cur_millis);
 //  Serial.print("\t");
@@ -77,6 +78,7 @@ int SensorMH_Z19B::read_ppm(int & ppm) {
   memset(response, 0, 9);
   sensor_port.readBytes(response, 9);
 
+// DEBUG
 //  Serial.print("Response: ");
 //  for (size_t i = 0; i < 9; ++i) {
 //    Serial.print(" ");
@@ -142,6 +144,7 @@ int SensorMH_Z19B::calibrate_zero_point() {
   // Send calibration command
   sensor_port.write(command_calibrate_zero_point, 9);
 
+// DEBUG
 //  // Read the response (never mind that it is not used)
 //  memset(response, 0, 9);
 //  sensor_port.readBytes(response, 9);
