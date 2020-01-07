@@ -74,7 +74,7 @@ int SensorMH_Z19B::read_ppm(int & ppm) {
   // Send a request to sensor
   sensor_port.write(command_read_ppm, 9);
   
-  # TODO Check is_available() during some timeout?
+  // TODO Check is_available() during some timeout?
 
   // Get the response
   memset(response, 0, 9);
