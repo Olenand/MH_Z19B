@@ -31,6 +31,14 @@ class SensorMH_Z19B {
     /** Set/unset Automatic Baseline Correction */
     int set_abc(bool value);
 
+    /** Get ABC mode.
+     * If operation is successful, returns 0 and sets value parameter to true, if ABC is enabled. Otherwise, value is set to false.
+     * If the sensor is not ready, returns 1.
+     * If an error occurred, returns 2.
+     * This command is not mentioned in MH-Z19B datasheet! See: https://revspace.nl/MH-Z19B
+    */
+    int get_abc_mode(bool & value);
+
     int calibrate_zero_point();
 
   private:
@@ -50,6 +58,7 @@ class SensorMH_Z19B {
     const static uint8_t command_read_ppm[];
     const static uint8_t command_calibrate_zero_point[];
     const static uint8_t command_set_abc[];
+    const static uint8_t command_get_abc[];
     const static uint8_t command_unset_abc[];
     // A buffer for the response
     uint8_t * response;

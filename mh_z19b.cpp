@@ -7,6 +7,7 @@
 const uint8_t SensorMH_Z19B::command_read_ppm[]             = {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
 const uint8_t SensorMH_Z19B::command_calibrate_zero_point[] = {0xFF, 0x01, 0x87, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78};
 const uint8_t SensorMH_Z19B::command_set_abc[]              = {0xFF, 0x01, 0x79, 0xA0, 0x00, 0x00, 0x00, 0x00, 0xE6};
+const uint8_t SensorMH_Z19B::command_get_abc[]              = {0xFF, 0x01, 0x7D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x82};
 const uint8_t SensorMH_Z19B::command_unset_abc[]            = {0xFF, 0x01, 0x79, 0x00, 0x00, 0x00, 0x00, 0x00, 0x86};
 
 
@@ -108,6 +109,9 @@ int SensorMH_Z19B::read_ppm(int & ppm) {
 
 
 int SensorMH_Z19B::set_abc(bool value) {
+  // DEBUG
+//   Serial.println("set_abc() called.");
+
   // Check running status
   if (!is_ready()) {
     // Serial.println("set_abc(): sensor is not ready!!!");
@@ -132,6 +136,45 @@ int SensorMH_Z19B::set_abc(bool value) {
   return 0;
 }
 
+int SensorMH_Z19B::get_abc_mode(bool & value) {
+  // TODO There is too much copy-paste from read_ppm(). Refactor?
+
+  // Check running status
+  if (!is_ready()) {
+    // Serial.println("get_abc_mode(): sensor is not ready!!!");
+    return 1;
+  }
+
+  // Clear serial buffer
+  flush_sensor_port_in();
+
+  // Send the request
+  sensor_port.write(command_get_abc, 9);
+
+  // Get the response
+  memset(response, 0, 9);
+  sensor_port.readBytes(response, 9);
+
+  // DEBUG
+//   Serial.print("Response: ");
+//   for (size_t i = 0; i < 9; ++i) {
+//     Serial.print("\t");
+//     Serial.print(response[i], HEX);
+//   }
+//   Serial.println("");
+
+  // Compute the checksum
+  uint8_t checksum = get_checksum(response);
+  
+  // Parse the answer
+  if ( !(response[0] == 0xFF && response[1] == 0x7D && response[8] == checksum) ) {
+    // Serial.println("Wrong checksum!!! Got " + String(response[8]) + " expected " + String(checksum));
+    return 2;
+  } else {
+    value = response[7];
+  }
+  return 0;
+}
 
 int SensorMH_Z19B::calibrate_zero_point() {
   // Check running status
